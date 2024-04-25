@@ -5,14 +5,10 @@
 #include <vector>
 
 class KeyErrorException : public std::exception
-{
-
-};
+{};
 
 class SizeLimitException : public std::exception
-{
-
-};
+{};
 
 
 class HashTable

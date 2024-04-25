@@ -3,7 +3,7 @@ using namespace std;
 
 HashTable::HashTable() {
     this->_size = 511;
-    this->_hash_table = std::vector<std::pair<std::string, std::string>>(this->_size);
+    this->_hash_table = vector<pair<string, string>>(this->_size);
     for (vector<pair<string, string>>::iterator it = this->_hash_table.begin(); it != this->_hash_table.end(); it++)
         *it = make_pair("", "");
 }
@@ -102,9 +102,9 @@ void HashTable::print() {
     unsigned int current_id = 0;
     for (std::vector<std::pair<std::string, std::string>>::iterator it = this->_hash_table.begin(); it != this->_hash_table.end(); it++) {
         if (it->first != "" && it->second != "") {
-            std::cout << "HASH: " << current_id << ":: ";
-            std::cout << it->first << "-->" << it->second << "   ";
-            std::cout << std::endl;
+            cout << "HASH: " << current_id << ":: ";
+            cout << it->first << "-->" << it->second << "   ";
+            cout << std::endl;
         }
         current_id++;
     }
