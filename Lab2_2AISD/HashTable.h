@@ -1,41 +1,42 @@
+#include <exception>
+#include <random>
 #include <iostream>
-#include <string>
+#include <list>
+#include <vector>
 
-template <typename K, typename T>
-class MyUnorderedMap {
-private:
-    static const int TABLE_SIZE = 100;
-    struct Node {
-        K key;
-        T value;
-        bool empty;
-    };
-    Node table[TABLE_SIZE];
+class KeyErrorException : public std::exception
+{
 
+};
+
+class SizeLimitException : public std::exception
+{
+
+};
+
+
+class HashTable
+{
 public:
+    HashTable();
+    HashTable(const HashTable& other);
+    HashTable(unsigned int);
+    ~HashTable();
 
-    MyUnorderedMap() {                           //конструктор по умолчанию
-        for (int i = 0; i < TABLE_SIZE; ++i) {
-            table[i].empty = true;
-        }
-    }
+    HashTable& operator = (const HashTable& other);
+    void insert(std::string, std::string);
+    std::string search(std::string);
+    bool contains(std::string);
+    void insert_or_assign(std::string, std::string);
+    void erase(std::string);
+    void print();
+    int count(std::string);
 
-    MyUnorderedMap(const MyUnorderedMap& other) {  //конструктор копирования
-        for (int i = 0; i < TABLE_SIZE; ++i) {
-            table[i] = other.table[i];
-        }
-    }
+private:
+    unsigned int _hash(std::string);
+    std::string _random_string(unsigned int);
 
-                                                 // Оператор присваивания
-    MyUnorderedMap& operator=(const MyUnorderedMap& other) {
-        if (this == &other) {
-            return *this;
-        }
-
-        for (int i = 0; i < TABLE_SIZE; ++i) {
-            table[i] = other.table[i];
-        }
-
-        return *this;
-    }
+private:
+    unsigned int _size;
+    std::vector<std::pair<std::string, std::string>> _hash_table;
 };

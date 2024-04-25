@@ -18,7 +18,10 @@
     <ClCompile Include="HashTable.h">
       <Filter>Файлы заголовков</Filter>
     </ClCompile>
-    <ClCompile Include="Task.cpp">
+    <ClCompile Include="task.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="HashTable.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
