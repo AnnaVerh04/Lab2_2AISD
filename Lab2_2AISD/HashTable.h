@@ -10,6 +10,11 @@ class KeyErrorException : public std::exception
 class SizeLimitException : public std::exception
 {};
 
+class DuplicateKeyException : public std::exception
+{};
+
+class ElementNotFoundException : public std::exception
+{};
 
 class HashTable
 {

@@ -16,9 +16,9 @@ HashTable::HashTable(const HashTable& other) {
 HashTable::HashTable(unsigned int count)
 {
     this->_size = 511;
-    this->_hash_table = std::vector<std::pair<std::string, std::string>>(this->_size);
+    this->_hash_table = vector<pair<string, string>>(this->_size);
     for (vector<pair<string, string>>::iterator it = this->_hash_table.begin(); it != this->_hash_table.end(); it++)
-        *it = std::make_pair("", "");
+        *it = make_pair("", "");
 
     unsigned int size = this->_size >= count ? count : this->_size;
     for (unsigned int i = 0; i < size; i++) {
@@ -43,19 +43,22 @@ HashTable& HashTable::operator =(const HashTable& other) {
 
 void HashTable::insert(string key, string value) {
     unsigned int id = this->_hash(key);
-    if (this->_hash_table[id].first == "" && this->_hash_table[id].second == "") {
-        this->_hash_table[id] = std::make_pair(key, value);
-        return;
-    }
-    for (; id < this->_hash_table.size(); id++)
-        if (this->_hash_table[id].first == "" && this->_hash_table[id].second == "") {
-            this->_hash_table[id] = make_pair(key, value);
+
+    for (unsigned int i = 0; i < this->_hash_table.size(); i++) {
+        if (this->_hash_table[i].first == key) {
+            throw DuplicateKeyException(); 
+        }
+
+        if (this->_hash_table[i].first == "" && this->_hash_table[i].second == "") {
+            this->_hash_table[i] = make_pair(key, value);
             return;
         }
-    throw SizeLimitException();
+    }
+
+    throw SizeLimitException(); 
 }
 
-std::string HashTable::search(string key) {
+string HashTable::search(string key) {
     unsigned int id = this->_hash(key);
     if (this->_hash_table[id].first != "" && this->_hash_table[id].second != "") {
         for (; id < this->_hash_table.size(); id++)
@@ -67,7 +70,7 @@ std::string HashTable::search(string key) {
 }
 
 bool HashTable::contains(string value) {
-    for (vector<std::pair<string, string>>::iterator it = this->_hash_table.begin(); it != this->_hash_table.end(); it++) {
+    for (vector<pair<string, string>>::iterator it = this->_hash_table.begin(); it != this->_hash_table.end(); it++) {
         if (it->second == value)
             return true;
     }
@@ -78,7 +81,7 @@ void HashTable::insert_or_assign(string key, string value)
 {
     unsigned int id = this->_hash(key);
     if (this->_hash_table[id].first != "" && this->_hash_table[id].second != "") {
-        this->_hash_table[id] = std::make_pair("", "");
+        this->_hash_table[id] = make_pair("", "");
         this->insert(key, value);
         return;
     }
@@ -87,20 +90,18 @@ void HashTable::insert_or_assign(string key, string value)
 
 void HashTable::erase(string key) {
     unsigned int id = this->_hash(key);
-    if (this->_hash_table[id].first == "" && this->_hash_table[id].second == "") {
-        return;
-    }
-    for (; id < this->_hash_table.size(); id++)
+    for (; id < this->_hash_table.size(); id++) {
         if (this->_hash_table[id].first == key) {
-            this->_hash_table[id] = std::make_pair("", "");
+            this->_hash_table[id] = make_pair("", ""); // Удаляем элемент
             return;
         }
-
+    }
+    throw ElementNotFoundException(); // Выбросить исключение, если элемент не найден
 }
 
 void HashTable::print() {
     unsigned int current_id = 0;
-    for (std::vector<std::pair<std::string, std::string>>::iterator it = this->_hash_table.begin(); it != this->_hash_table.end(); it++) {
+    for (vector<pair<string, string>>::iterator it = this->_hash_table.begin(); it != this->_hash_table.end(); it++) {
         if (it->first != "" && it->second != "") {
             cout << "HASH: " << current_id << ":: ";
             cout << it->first << "-->" << it->second << "   ";
@@ -110,7 +111,7 @@ void HashTable::print() {
     }
 }
 
-int HashTable::count(std::string key)
+int HashTable::count(string key)
 {
     unsigned int id = this->_hash(key);
     if (this->_hash_table[id].first == "" && this->_hash_table[id].second == "") {
@@ -118,23 +119,23 @@ int HashTable::count(std::string key)
     }
     for (; id < this->_hash_table.size(); id++)
         if (this->_hash_table[id].first == key) {
-            this->_hash_table[id] = std::make_pair("", "");
+            this->_hash_table[id] = make_pair("", "");
             return 1;
         }
     return 0;
 }
 
-unsigned int HashTable::_hash(std::string value) {
+unsigned int HashTable::_hash(string value) {
     unsigned int h = 0, a = 127;
     for (unsigned int ind = 0; ind < value.size(); ind++)
         h = (a * h + (unsigned int)(value[ind])) % this->_size;
     return h;
 }
 
-std::string HashTable::_random_string(unsigned int size)
+string HashTable::_random_string(unsigned int size)
 {
     char symbols[30] = "abcdefghijklmnopqrstuvwxyz _.";
-    std::string value = "";
+    string value = "";
     for (unsigned int i = 0; i < size; i++) {
         char c = symbols[rand() % 30];
         value += c;
