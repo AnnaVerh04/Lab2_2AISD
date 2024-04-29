@@ -90,13 +90,15 @@ void HashTable::insert_or_assign(string key, string value)
 
 void HashTable::erase(string key) {
     unsigned int id = this->_hash(key);
-    for (; id < this->_hash_table.size(); id++) {
+    if (this->_hash_table[id].first == "" && this->_hash_table[id].second == "") {
+        return;
+    }
+    for (; id < this->_hash_table.size(); id++)
         if (this->_hash_table[id].first == key) {
-            this->_hash_table[id] = make_pair("", ""); // Удаляем элемент
+            this->_hash_table[id] = make_pair("", "");
             return;
         }
-    }
-    throw ElementNotFoundException(); // Выбросить исключение, если элемент не найден
+
 }
 
 void HashTable::print() {
